@@ -235,7 +235,7 @@ let gameActive = true;
 let currentIndex = null;
 let currentQuestion = null;
 let answerLocked = false; // 搶答鎖
-
+let currentQuestion_idx = 0; // 計算回答題目編號
 // 計分功能
 let scores = {
   "O": 0,
@@ -293,6 +293,16 @@ const mathQuestions = [
 //   { q: "16 ÷ 4", a: "4" },
 ];
 
+shuffle(mathQuestions);
+console.log(mathQuestions);
+function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]]; // 交換元素
+    }
+    return array;
+}
+
 function createBoard() {
   for (let i = 0; i < 9; i++) {
     const cell = document.createElement("div");
@@ -309,9 +319,9 @@ function handleCellClick(e) {
   if (gameBoard[index] !== "" || !gameActive || currentIndex !== null) return;
 
   currentIndex = index;
-  currentQuestion = mathQuestions[Math.floor(Math.random() * mathQuestions.length)];
+  currentQuestion = mathQuestions[currentQuestion_idx]; //mathQuestions[Math.floor(Math.random() * mathQuestions.length)];
   answerLocked = false;
-
+  currentQuestion_idx += 1
   showQuestion();
 }
 
@@ -428,7 +438,8 @@ function resetGame() {
   currentIndex = null;
   currentQuestion = null;
   answerLocked = false;
-  
+  currentQuestion_idx = 0;
+  shuffle(mathQuestions);
   // 重置棋盤
   const cells = document.querySelectorAll(".cell");
   cells.forEach(cell => {
